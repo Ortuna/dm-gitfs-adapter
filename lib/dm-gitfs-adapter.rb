@@ -1,4 +1,5 @@
-require "dm/gitfs/adapter/version"
+require 'dm-core'
+require 'grit'
 
 module Dm
   module Gitfs
