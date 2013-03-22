@@ -1,9 +1,14 @@
 describe DataMapper::Gitfs::Adapter do
-  describe 'adapter setup' do
-    it 'Should find the adapter' do
-      expect {
-        DataMapper.setup(:default, 'gitfs:://sample_book') 
-      }.not_to raise_error
-    end
+
+  it 'finds the adapter' do
+    expect {
+      DataMapper.setup(:default, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree") 
+    }.not_to raise_error
+  end
+
+  it 'raises errors on unkown directories' do
+    expect {
+      DataMapper.setup(:default, 'gitfs:://fixtures/unkown_tree') 
+    }.to raise_error
   end
 end
