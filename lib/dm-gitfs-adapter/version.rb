@@ -1,10 +1,5 @@
-module Dm
+module DataMapper
   module Gitfs
-    module Adapter
-      VERSION = "0.0.1"
-      def version
-        VERSION
-      end
-    end
+      VERSION = '0.0.1'
   end
 end
