@@ -14,6 +14,7 @@ module DataMapper
           apply_config(record, load_directory_config(item))
           records << record
         end
+        set_parent_model(records, params) if params[:path_key]
         records
       end
 

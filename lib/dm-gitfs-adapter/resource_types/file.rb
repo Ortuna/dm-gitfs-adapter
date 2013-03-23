@@ -13,11 +13,11 @@ module DataMapper
           record.path = item
           records << record
         end
-         apply_parent_condition(records, params) if params[:path_key]
+         set_parent_model(records, params) if params[:path_key]
          records
       end
 
-      def apply_parent_condition(records, params)
+      def set_parent_model(records, params)
         records.each do |record|
           record.send("#{params[:path_key]}=", params[:root_path])
         end
