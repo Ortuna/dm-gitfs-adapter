@@ -28,7 +28,7 @@ module DataMapper
 
       private
       def allowed_resource_types
-        [:directory, :file]
+        [:directory, :file, :markdown]
       end
 
     end

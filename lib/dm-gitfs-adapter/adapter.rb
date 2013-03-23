@@ -2,6 +2,7 @@ module DataMapper
   module Gitfs
     class Adapter < DataMapper::Adapters::AbstractAdapter
 
+      include DataMapper::Gitfs::Markdown
       include DataMapper::Gitfs::Directory
       include DataMapper::Gitfs::File
 

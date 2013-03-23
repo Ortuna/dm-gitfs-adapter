@@ -12,7 +12,6 @@ module DataMapper
           record  = query.model.new
           record.send(:path=, item)
           record.send(:base_path=, ::File.basename(item))
-          record.send(:after_load) if record.respond_to? :after_load
           records << record
         end
         set_parent_model(records, params) if params[:path_key]
