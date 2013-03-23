@@ -34,6 +34,8 @@ describe 'Multiple levels directories' do
       parent = Parent.first
       sub    = parent.subs.first
       sub.title.should == 'subdirectoryz'
+
+      sub.model.should == Sub
     end
   end
 end
