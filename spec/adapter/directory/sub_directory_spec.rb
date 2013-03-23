@@ -5,8 +5,7 @@ describe 'Multiple levels directories' do
       include DataMapper::Gitfs::Resource
       resource_type :directory
       property      :title, String
-
-      has n, :directories, 'Directory'
+      has n,        :directories, 'Directory'
     end
 
     it 'retrieves directories that are nested' do
@@ -21,14 +20,13 @@ describe 'Multiple levels directories' do
     class Parent
       include DataMapper::Gitfs::Resource
       resource_type :directory
-      has n, :subs
+      has n,        :subs
     end
 
     class Sub
       include DataMapper::Gitfs::Resource
       resource_type :directory
-
-      property :title, String
+      property   :title, String
       belongs_to :parent
     end
 
