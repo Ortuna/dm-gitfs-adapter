@@ -28,6 +28,23 @@ describe DataMapper::Gitfs::Adapter do
         item.base_path = "zyx abc"
       }.to raise_error      
     end
+  end
 
+  describe 'hooks' do
+    DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
+    class HooksExample
+      include DataMapper::Gitfs::Resource
+      resource_type :directory
+
+      def after_load
+        raise 'FailHere'
+      end
+    end
+
+    it 'should call after_load on the model' do
+      expect {
+        a = HooksExample.first
+      }.to raise_error
+    end
   end
 end

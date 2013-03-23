@@ -5,7 +5,8 @@ module DataMapper
       def self.included(model)
         model.send(:include, DataMapper::Resource)
         model.extend self
-        model.property :path, String, :key => true
+        model.property :path,      String, :key    => true, :writer => :private
+        model.property :base_path, String, :writer => :private
       end
       
       def default_repository_name

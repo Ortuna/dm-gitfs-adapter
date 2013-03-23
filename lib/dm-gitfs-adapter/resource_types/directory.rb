@@ -9,8 +9,10 @@ module DataMapper
         root_path = params[:root_path] || @path
         Dir.glob("#{root_path}/**").each do |item|
           next unless ::File.directory?(item)
-          record      = query.model.new
-          record.path = item
+          record = query.model.new
+          record.send(:path=, item)
+          record.send(:base_path=, ::File.basename(item))
+          record.send(:after_load) if record.respond_to? :after_load
           apply_config(record, load_directory_config(item))
           records << record
         end

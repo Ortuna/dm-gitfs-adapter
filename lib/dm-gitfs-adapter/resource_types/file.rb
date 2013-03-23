@@ -9,12 +9,14 @@ module DataMapper
         root_path = params[:root_path] || @path
         Dir.glob("#{root_path}/**/*").each do |item|
           next if !::File.file?(item) || ::File.basename(item)[0] == '_'
-          record      = query.model.new
-          record.path = item
+          record  = query.model.new
+          record.send(:path=, item)
+          record.send(:base_path=, ::File.basename(item))
+          record.send(:after_load) if record.respond_to? :after_load
           records << record
         end
-         set_parent_model(records, params) if params[:path_key]
-         records
+        set_parent_model(records, params) if params[:path_key]
+        records
       end
 
       def set_parent_model(records, params)
