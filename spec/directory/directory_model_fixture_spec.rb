@@ -1,7 +1,7 @@
 describe DirectoryModel do
   
   before :all do
-    DataMapper.setup(:default, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
+    DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
   end
 
   it 'loads correctly' do

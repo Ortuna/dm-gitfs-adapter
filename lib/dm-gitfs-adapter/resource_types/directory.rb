@@ -7,7 +7,6 @@ module DataMapper
         records   = []
         params    = extract_query_params(query)
         root_path = params[:root_path] || @path
-
         Dir.glob("#{root_path}/**").each do |item|
           next unless ::File.directory?(item)
           record      = query.model.new

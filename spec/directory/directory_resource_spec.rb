@@ -14,7 +14,7 @@ describe  DataMapper::Gitfs::Resource do
   end
 
   it 'added the root path of the adapter to all models' do
-    DataMapper.setup(:default, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
+    DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
     PathExample.repository_path.should == "#{SPEC_PATH}/fixtures/sample_tree"
   end
 
