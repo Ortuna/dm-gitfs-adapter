@@ -28,6 +28,7 @@ describe 'relationship' do
 
   it 'finds its subdirectories' do
     directory = ExampleDirectory.first
+    File.basename(directory.files.first.path).should == 'example_file.md'
     # p directory.directories
     # directory.directories.should_not be_empty
   end

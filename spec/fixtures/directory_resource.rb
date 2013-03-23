@@ -1,4 +1,4 @@
-DataMapper.setup(:default, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
+DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
 
 class DirectoryListerConfig
   include DataMapper::Gitfs::Resource
