@@ -1,9 +1,13 @@
-module DataMapper
-  module Gitfs
-    module Git
-      def inst_method
+module DataMapper::Gitfs
+  module Git
 
-      end
+    private
+    def create_empty_repo
+
+    end
+
+    def repo_exists?
+
     end
   end
 end

@@ -1,11 +1,12 @@
 describe DataMapper::Gitfs::Git do
-  class GitfsIncluded
-    include DataMapper::Gitfs::Resource
-    resource_type :markdown
+  before :all do
+    @tmp_path = File.expand_path('/tmp/git_fs_include')  
+    FileUtils.mkdir(@tmp_path) unless File.exists?(@tmp_path)
+    DataMapper.setup(:gitfs, "gitfs:://#{@tmp_path}")
   end
 
-  it 'should include the git mixin' do
-    gitfs = GitfsIncluded.new
-    gitfs.respond_to?(:inst_method).should == true
+  after :all do
+    DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
+    FileUtils.rm_rf @tmp_path
   end
 end

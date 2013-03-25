@@ -22,11 +22,7 @@ describe DataMapper::Gitfs::Adapter do
       item = ROExample.first
       expect {
         item.path = "its late"
-      }.to raise_error
-
-      expect {
-        item.base_path = "zyx abc"
-      }.to raise_error      
+      }.to raise_error    
     end
   end
 

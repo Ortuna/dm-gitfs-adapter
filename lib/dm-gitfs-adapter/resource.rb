@@ -8,7 +8,7 @@ module DataMapper
 
         model.extend self
         model.property :path,      String, :writer => :private, :key    => true
-        model.property :base_path, String, :writer => :private
+        model.property :base_path, String
       end
 
       def default_repository_name
@@ -18,7 +18,7 @@ module DataMapper
       def resource_type(type = :directory)
         if allowed_resource_types.include? type
           @resource_type ||= type
-          self.send(:include, allowed_resource_types[type]) if  allowed_resource_types[type]
+          self.send(:include, allowed_resource_types[type]) if allowed_resource_types[type]
         else
           raise "Unknown resource_type #{type}"
         end
@@ -33,7 +33,7 @@ module DataMapper
       def allowed_resource_types
         { 
           :directory => nil,
-          :file      => nil,
+          :file      => DataMapper::Gitfs::Model::File,
           :markdown  => DataMapper::Gitfs::Model::Markdown
         }
       end

@@ -26,8 +26,9 @@ module DataMapper
       end
 
       def load_markdown_data(record)
-        markdown = read_markdown_file(record.path)
-        metadata = extract_metadata(markdown)
+        content  = read_markdown_file(record.path)
+        markdown = extract_markdown(content).strip
+        metadata = extract_metadata(content)
 
         record.markdown = markdown if record.respond_to? :markdown
         record.metadata = metadata if record.respond_to? :metadata
@@ -39,18 +40,11 @@ module DataMapper
       end
 
       def read_config
-        yaml_file_to_hash "#{self.path}"
-      end
-
-      def yaml_file_to_hash(file_path)
-        config_hash = YAML::load(::File.open(file_path))
-        return config_hash ? config_hash : {}
-      rescue
-        return {}
+        Gitfshelper.yaml_file_to_hash "#{self.path}"
       end
 
       def extract_metadata(md)
-        yaml_to_hash match_data(md, 1)
+        Gitfshelper.yaml_to_hash match_data(md, 1)
       rescue
         {}
       end
@@ -59,10 +53,6 @@ module DataMapper
         match_data(md, 2)
       rescue
         ""
-      end
-
-      def yaml_to_hash(yaml)
-        YAML::load(yaml)
       end
 
       def match_data(md, index)
