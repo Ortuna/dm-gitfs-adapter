@@ -31,6 +31,12 @@ describe DataMapper::Gitfs::Markdown do
       property :metadata, Class
     end 
 
+    class MdWithAutoVariables
+      include DataMapper::Gitfs::Resource
+      resource_type :markdown
+      apply_markdown_properties
+    end
+
     it 'should load its metadata' do
       md = Md.first
       md.metadata["title"].should == 'Section 1'
@@ -58,6 +64,14 @@ describe DataMapper::Gitfs::Markdown do
     it 'sets metadata property if present' do
       md = MdWithoutMarkdown.first
       md.metadata.should_not be_nil
+    end
+
+    it 'sets metadata and markdown properties with #markdown_properties' do
+      md = MdWithAutoVariables.first
+      md.metadata.should_not be_nil
+      md.markdown.should_not be_nil
+
+      md.metadata["title"].should == "Section 1"
     end
   end
 end

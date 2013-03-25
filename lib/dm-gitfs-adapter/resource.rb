@@ -9,6 +9,11 @@ module DataMapper
         model.property :base_path, String, :writer => :private
       end
       
+      def apply_markdown_properties
+        self.property :metadata, Class
+        self.property :markdown, String
+      end
+
       def default_repository_name
         :gitfs
       end

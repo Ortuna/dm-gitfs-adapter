@@ -12,7 +12,7 @@ module DataMapper
           record  = query.model.new
           record.send(:path=, item)
           record.send(:base_path=, ::File.basename(item))
-          after_load(record)
+          load_markdown_data(record)
           records << record
         end
         set_parent_model(records, params) if params[:path_key]
@@ -25,7 +25,7 @@ module DataMapper
         end
       end
 
-      def after_load(record)
+      def load_markdown_data(record)
         markdown        = read_markdown_file(record.path)
         record.markdown = markdown if record.respond_to? :markdown
         record.metadata = extract_metadata(markdown) if record.respond_to? :metadata
