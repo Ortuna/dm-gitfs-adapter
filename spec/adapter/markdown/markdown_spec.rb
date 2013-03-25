@@ -12,29 +12,11 @@ describe DataMapper::Gitfs::Markdown do
     class Md
       include DataMapper::Gitfs::Resource
       resource_type :markdown
-
-      property :metadata, Class
-      property :markdown, String
-    end
-
-    class MdWithoutMetaData
-      include DataMapper::Gitfs::Resource
-      resource_type :markdown
-
-      property :markdown, String
-    end
-
-    class MdWithoutMarkdown
-      include DataMapper::Gitfs::Resource
-      resource_type :markdown
-
-      property :metadata, Class
     end 
 
     class MdWithAutoVariables
       include DataMapper::Gitfs::Resource
       resource_type :markdown
-      apply_markdown_properties
     end
 
     it 'should load its metadata' do
@@ -42,27 +24,13 @@ describe DataMapper::Gitfs::Markdown do
       md.metadata["title"].should == 'Section 1'
     end
 
-    it 'doesnt set a metadata property if not present' do
-      md = MdWithoutMetaData.first
-      expect {
-        md.metadata
-      }.to raise_error(NoMethodError)
-    end
-
-    it 'doesnt set a markdown property if not present' do
-      md = MdWithoutMarkdown.first
-      expect {
-        md.markdown
-      }.to raise_error(NoMethodError)
-    end
-
     it 'sets markdown property if present' do
-      md = MdWithoutMetaData.first
+      md = MdWithAutoVariables.first
       md.markdown.should_not be_nil
     end
 
     it 'sets metadata property if present' do
-      md = MdWithoutMarkdown.first
+      md = MdWithAutoVariables.first
       md.metadata.should_not be_nil
     end
 
@@ -85,7 +53,6 @@ describe DataMapper::Gitfs::Markdown do
     class MdMetadata
       include DataMapper::Gitfs::Resource
       resource_type :markdown
-      apply_markdown_properties
 
       property :author, String
     end

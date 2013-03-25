@@ -4,14 +4,11 @@ module DataMapper
 
       def self.included(model)
         model.send(:include, DataMapper::Resource)
+        model.send(:include, DataMapper::Gitfs::Git)
+
         model.extend self
         model.property :path,      String, :writer => :private, :key    => true
         model.property :base_path, String, :writer => :private
-      end
-      
-      def apply_markdown_properties
-        self.property :metadata, Class
-        self.property :markdown, String
       end
 
       def default_repository_name
@@ -21,6 +18,7 @@ module DataMapper
       def resource_type(type = :directory)
         if allowed_resource_types.include? type
           @resource_type ||= type
+          self.send(:include, allowed_resource_types[type]) if  allowed_resource_types[type]
         else
           raise "Unknown resource_type #{type}"
         end
@@ -33,7 +31,11 @@ module DataMapper
 
       private
       def allowed_resource_types
-        [:directory, :file, :markdown]
+        { 
+          :directory => nil,
+          :file      => nil,
+          :markdown  => DataMapper::Gitfs::Model::Markdown
+        }
       end
 
     end
