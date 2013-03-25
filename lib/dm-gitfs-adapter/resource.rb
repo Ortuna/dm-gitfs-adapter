@@ -1,11 +1,11 @@
 module DataMapper
   module Gitfs
     module Resource
-      
+
       def self.included(model)
         model.send(:include, DataMapper::Resource)
         model.extend self
-        model.property :path,      String, :key    => true, :writer => :private
+        model.property :path,      String, :writer => :private, :key    => true
         model.property :base_path, String, :writer => :private
       end
       

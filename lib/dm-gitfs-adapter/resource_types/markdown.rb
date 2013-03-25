@@ -1,15 +1,38 @@
 module DataMapper
   module Gitfs
     module Markdown
-      attr_accessor :metadata, :markdown
-      def after_load
-        @markdown = read_markdown
-        @metadata = extract_metadata(@markdown)
-      end
 
       private
-      def read_markdown
-        File.read(self.path) if File.exists?(self.path)
+      def read_markdown(query)
+        records   = []
+        params    = extract_query_params(query)
+        root_path = params[:root_path] || @path
+        Dir.glob("#{root_path}/**/*").each do |item|
+          next if !::File.file?(item) || ::File.basename(item)[0] == '_'
+          record  = query.model.new
+          record.send(:path=, item)
+          record.send(:base_path=, ::File.basename(item))
+          after_load(record)
+          records << record
+        end
+        set_parent_model(records, params) if params[:path_key]
+        records
+      end
+
+      def set_parent_model(records, params)
+        records.each do |record|
+          record.send("#{params[:path_key]}=", params[:root_path])
+        end
+      end
+
+      def after_load(record)
+        markdown        = read_markdown_file(record.path)
+        record.markdown = markdown if record.respond_to? :markdown
+        record.metadata = extract_metadata(markdown) if record.respond_to? :metadata
+      end
+      
+      def read_markdown_file(path)
+        ::File.read(path) if ::File.exists?(path)
       end
 
       def read_config
@@ -17,7 +40,7 @@ module DataMapper
       end
 
       def yaml_file_to_hash(file_path)
-        config_hash = YAML::load(File.open(file_path))
+        config_hash = YAML::load(::File.open(file_path))
         return config_hash ? config_hash : {}
       rescue
         return {}
