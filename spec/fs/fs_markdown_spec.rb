@@ -15,6 +15,12 @@ describe DataMapper::Gitfs::Model::Markdown do
     resource_type :markdown
   end
 
+  class MarkdownResourceWithProperty
+    include DataMapper::Gitfs::Resource
+    resource_type :markdown
+    property :time_dot_now, Class
+  end
+
   def default_metadata
     {
       'title'   => 'example title',
@@ -62,6 +68,17 @@ describe DataMapper::Gitfs::Model::Markdown do
     md = find_resource('md_test.md')
     md.metadata['author'].should == 'poe'
     md.markdown.should == '#this is md'
+  end
+
+  it 'saves loose fields to metadata' do
+    time_dot_now = Time.now
+    mdwp = MarkdownResourceWithProperty.new
+    mdwp.base_path     = 'md_with_property.md'
+    mdwp.time_dot_now  = time_dot_now
+    mdwp.save
+
+    mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
+    mdwp.time_dot_now.should == time_dot_now
   end
 
 end

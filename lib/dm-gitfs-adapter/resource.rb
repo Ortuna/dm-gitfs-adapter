@@ -2,6 +2,8 @@ module DataMapper
   module Gitfs
     module Resource
 
+      include DataMapper::Gitfs::Model::Common
+
       def self.included(model)
         model.send(:include, DataMapper::Resource)
         model.send(:include, DataMapper::Gitfs::Git)
@@ -15,7 +17,8 @@ module DataMapper
         :gitfs
       end
 
-      def resource_type(type = :directory)
+      def resource_type(type = :unknown)
+        return @resource_type if @resource_type
         if allowed_resource_types.include? type
           @resource_type ||= type
           self.send(:include, allowed_resource_types[type]) if allowed_resource_types[type]
@@ -32,7 +35,7 @@ module DataMapper
       private
       def allowed_resource_types
         { 
-          :directory => nil,
+          :directory => DataMapper::Gitfs::Model::Directory,
           :file      => DataMapper::Gitfs::Model::File,
           :markdown  => DataMapper::Gitfs::Model::Markdown
         }

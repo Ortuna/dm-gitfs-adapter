@@ -9,8 +9,10 @@ require 'dm-gitfs-adapter/adapter_extensions/directory'
 require 'dm-gitfs-adapter/adapter_extensions/file'
 
 #Mixins for the models e.g. model_instance.xyz
+require 'dm-gitfs-adapter/model_extensions/common'
 require 'dm-gitfs-adapter/model_extensions/file'
 require 'dm-gitfs-adapter/model_extensions/markdown'
+require 'dm-gitfs-adapter/model_extensions/directory'
 
 require 'dm-gitfs-adapter/utils'
 require 'dm-gitfs-adapter/git/git'

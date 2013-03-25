@@ -16,11 +16,11 @@ describe DataMapper::Gitfs::Model::File do
   end
 
   def create_resource(resource_path, content)
-    FileResource.new.tap do |file|
-      file.base_path = resource_path
-      file.content   = content
-      file.save
-    end
+    file = FileResource.new
+    file.base_path = resource_path
+    file.content   = content
+    file.save
+    file
   end
 
   def find_resource(base_path)
