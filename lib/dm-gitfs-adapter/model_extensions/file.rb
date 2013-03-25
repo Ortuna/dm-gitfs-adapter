@@ -4,6 +4,10 @@ module DataMapper::Gitfs::Model
       model.property :content, DataMapper::Property::Text
     end
 
+    def repo
+      repository.adapter.repo
+    end
+
     def destroy
       destroy_resource if resource_exists?
     end

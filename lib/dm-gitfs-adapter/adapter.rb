@@ -6,12 +6,20 @@ module DataMapper
       include DataMapper::Gitfs::Directory
       include DataMapper::Gitfs::File
 
-      attr_reader :path
+      attr_reader   :path
+      attr_accessor :repo
 
       def initialize(name, options)
         super
-        verify_adapter_path_exists! options["path"]
         @path = options["path"]
+        verify_adapter_path_exists! @path
+        create_git_repo! @path
+      end
+
+      def create_git_repo!(path)
+        @repo = Rugged::Repository.new(path)
+      rescue
+        @repo = Rugged::Repository.init_at(path, false)
       end
 
       def verify_adapter_path_exists!(path)
