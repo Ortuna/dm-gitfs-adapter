@@ -23,6 +23,15 @@ module DataMapper
       end
 
       private
+      def apply_config(record, options)
+        return unless options
+        options.each do |option, value|
+          if record.respond_to? "#{option}="
+            record.public_send("#{option}=".to_sym, value)
+          end
+        end
+      end
+
       def extract_query_params(query)
         return {} unless conditions = query.options[:conditions]
         conditions.each do |options, parent_model|

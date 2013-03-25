@@ -26,9 +26,12 @@ module DataMapper
       end
 
       def load_markdown_data(record)
-        markdown        = read_markdown_file(record.path)
+        markdown = read_markdown_file(record.path)
+        metadata = extract_metadata(markdown)
+
         record.markdown = markdown if record.respond_to? :markdown
-        record.metadata = extract_metadata(markdown) if record.respond_to? :metadata
+        record.metadata = metadata if record.respond_to? :metadata
+        apply_config(record, metadata)
       end
       
       def read_markdown_file(path)

@@ -73,5 +73,32 @@ describe DataMapper::Gitfs::Markdown do
 
       md.metadata["title"].should == "Section 1"
     end
+
+    it 'should not complain if there isnt any markdown' do
+      expect {
+        md = Md.all(:base_path => "folder2_file.md")
+      }.not_to raise_error
+    end
+  end
+
+  describe 'metadata' do
+    class MdMetadata
+      include DataMapper::Gitfs::Resource
+      resource_type :markdown
+      apply_markdown_properties
+
+      property :author, String
+    end
+
+    it 'sets properties that in metadata' do
+      md = MdMetadata.first
+      md.author.should_not be_nil
+    end
+
+    it 'doesnt complain if there isnt any markdown' do
+      expect {
+        md = MdMetadata.all(:base_path => "folder2_file.md")
+      }.not_to raise_error
+    end
   end
 end

@@ -20,15 +20,6 @@ module DataMapper
         records
       end
 
-      def apply_config(record, options)
-        return unless options
-        options.each do |option, value|
-          if record.respond_to? "#{option}="
-            record.public_send("#{option}=".to_sym, value)
-          end
-        end
-      end
-
       def load_directory_config(conf_path)
         conf_path = "#{conf_path}/_config.yml" unless ::File.file?(conf_path)
         return unless ::File.exists?(conf_path)
