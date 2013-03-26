@@ -1,5 +1,5 @@
 require 'dm-core'
-require 'rugged'
+require 'grit'
 
 require 'dm-gitfs-adapter/version'
 
@@ -15,7 +15,6 @@ require 'dm-gitfs-adapter/model_extensions/markdown'
 require 'dm-gitfs-adapter/model_extensions/directory'
 
 require 'dm-gitfs-adapter/utils'
-require 'dm-gitfs-adapter/git/git'
 require 'dm-gitfs-adapter/adapter'
 require 'dm-gitfs-adapter/resource'
 

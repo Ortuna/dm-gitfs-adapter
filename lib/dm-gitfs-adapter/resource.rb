@@ -6,7 +6,6 @@ module DataMapper
 
       def self.included(model)
         model.send(:include, DataMapper::Resource)
-        model.send(:include, DataMapper::Gitfs::Git)
 
         model.extend self
         model.property :path,      String, :writer => :private, :key    => true

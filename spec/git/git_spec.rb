@@ -1,4 +1,4 @@
-describe DataMapper::Gitfs::Git do
+describe DataMapper::Gitfs do
   before :each do
     @tmp_path = File.expand_path('/tmp/git_history')
     FileUtils.mkdir(@tmp_path) unless File.exists?(@tmp_path)
@@ -30,8 +30,19 @@ describe DataMapper::Gitfs::Git do
 
   end
 
-  it 'creates a log of changes' do
-    file = create_resource('example_file.txts', 'xyz')
+  it 'creats a commit for each change' do
+    file = create_resource('example_file.txt', 'xyz')
     file.save
+
+    file.repo.log.count.should == 1
+
+    file = FileResourceGit.first(:base_path => 'example_file.txt')
+    file.base_path = 'name_change.txt'
+    file.content   = 'new content'
+    file.save
+    
+    file.repo.log.count.should == 2
   end
+
+  it 'should delete old files from the index'
 end

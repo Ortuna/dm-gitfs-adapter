@@ -17,9 +17,9 @@ module DataMapper
       end
 
       def create_git_repo!(path)
-        @repo = Rugged::Repository.new(path)
+        @repo = Grit::Repo.new(path)
       rescue
-        @repo = Rugged::Repository.init_at(path, false)
+        @repo = Grit::Repo.init(path)
       end
 
       def verify_adapter_path_exists!(path)
