@@ -21,18 +21,18 @@ describe DataMapper::Gitfs do
   end
 
   def create_file(resource_path, content)
-    file = FileResourceGit.new
-    file.base_path = resource_path
-    file.content   = content
-    file.save
-    file
+    FileResourceGit.new.tap do |file|
+      file.base_path = resource_path
+      file.content   = content
+      file.save
+    end
   end
 
   def create_directory(resource_path)
-    directory = DirResourceGit.new
-    directory.base_path = resource_path
-    directory.save
-    directory
+    DirResourceGit.new.tap do |directory|
+      directory.base_path = resource_path
+      directory.save
+    end
   end
 
   it 'has a repo variable' do

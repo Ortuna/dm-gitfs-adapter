@@ -49,4 +49,23 @@ describe DataMapper::Gitfs::Model::Directory do
     dir = find_resource('folder1')
     dir.base_path.should == 'folder1'
   end
+
+  it 'should delete empty directories' do
+    directory     = create_resource('folderz')
+    complete_path = directory.send(:complete_path)
+
+    directory.destroy
+    File.exists?(complete_path).should == false
+  end
+
+  it 'should not delete occupied directory' do
+    directory     = create_resource('folderz')
+    complete_path = directory.send(:complete_path)
+
+    FileUtils.touch "#{complete_path}/example_file.zip"
+
+    directory.destroy
+    File.exists?(complete_path).should == true
+    File.exists?("#{complete_path}/example_file.zip").should == true    
+  end
 end

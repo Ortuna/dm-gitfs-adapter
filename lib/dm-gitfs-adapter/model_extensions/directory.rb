@@ -5,6 +5,13 @@ module DataMapper::Gitfs::Model
 
     end
 
+    def destroy
+      if Dir.glob("#{complete_path}/**").empty? &&
+         Dir.glob("#{complete_path}/.gitignore")
+         FileUtils.rm_rf complete_path
+      end
+    end
+
     def save
       rename_resource  if     should_rename?
       create_directory unless resource_exists?
@@ -14,7 +21,7 @@ module DataMapper::Gitfs::Model
     def rename_resource
       old_path = complete_path(original_base_path)
       new_path = complete_path
-      
+
       FileUtils.mv old_path, new_path
     end
 
