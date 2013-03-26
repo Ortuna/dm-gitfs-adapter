@@ -57,5 +57,5 @@ describe DataMapper::Gitfs do
 
     File.exists?(dir2.send(:complete_path)).should == true
   end
-  
+
 end
