@@ -6,10 +6,9 @@ module DataMapper::Gitfs::Model
     end
 
     def destroy
-      if Dir.glob("#{complete_path}/**").empty? &&
-         Dir.glob("#{complete_path}/.gitignore")
-         FileUtils.rm_rf complete_path
-      end
+      return unless empty?
+      FileUtils.rm_rf complete_path
+      git_update_tree "Removed #{base_path}"
     end
 
     def save
@@ -29,5 +28,12 @@ module DataMapper::Gitfs::Model
       FileUtils.mkdir_p complete_path
       FileUtils.touch   "#{complete_path}/.gitignore"
     end
+
+    private
+    def empty?
+      #does not care about hidden files
+      Dir.glob("#{complete_path}/**/*").empty?
+    end
+
   end
 end

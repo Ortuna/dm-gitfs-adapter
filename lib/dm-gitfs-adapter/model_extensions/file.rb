@@ -5,7 +5,9 @@ module DataMapper::Gitfs::Model
     end
 
     def destroy
-      destroy_resource if resource_exists?
+      return unless resource_exists?
+      destroy_resource 
+      git_update_tree "Removed #{base_path}"
     end
 
     def save
