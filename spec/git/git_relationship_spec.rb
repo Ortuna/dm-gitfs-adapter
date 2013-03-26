@@ -22,33 +22,29 @@ describe DataMapper::Gitfs do
     has n,        :files, 'RFile'
   end
 
-  it 'should save inside parent directory model' do
-    file = RFile.new
-    file.base_path = 'subfile.txt'
-
-    dir = RDir.new
-    dir.base_path = 'xyz'
-    dir.save
-    
-    file.directory = dir
-    file.save
-
-    file.base_path.should == RDir.first.files.first.base_path
-  end
-
-  it 'should move its children with a rename' do
-    dir = RDir.new
-    dir.base_path = 'temp'
+  def create_file_directory(file_name = 'temp.txt', directory_name = 'temp')
+    dir            = RDir.new
+    dir.base_path  = 'temp'
     dir.save
 
-    file = RFile.new
+    file           = RFile.new
     file.base_path = 'temp.txt'
     file.directory = dir
     file.save
 
-    original_path = dir.send(:complete_path)
-    dir = RDir.first(:base_path => 'temp')
-    dir.base_path = 'real_path'
+    return file, dir
+  end
+
+  it 'should save inside parent directory model' do
+    file, dir = create_file_directory 'new.txt', 'new'
+    file.base_path.should == RDir.first.files.first.base_path
+  end
+
+  it 'should move its children with a rename' do
+    file, dir      = create_file_directory
+    original_path  = dir.send(:complete_path)
+    dir            = RDir.first(:base_path => 'temp')
+    dir.base_path  = 'real_path'
     dir.save
 
     new_path = dir.send(:complete_path)
@@ -57,6 +53,35 @@ describe DataMapper::Gitfs do
 
     File.exists?(new_path).should == true
     File.exists?("#{new_path}/#{file.base_path}").should == true
+  end
+
+  it 'should not delete if has children' do
+    file, dir = create_file_directory 'should_not_delete.txt', 'safe_dir'
+    dir_path  = dir.send(:complete_path)
+    file_path = file.send(:complete_path)
+
+    File.exists?(dir_path).should  == true
+    File.exists?(file_path).should == true
+
+    dir.destroy
+    
+    File.exists?(dir_path).should  == true
+    File.exists?(file_path).should == true
+  end
+
+  it 'should delete if it doesnt have children' do
+    file, dir = create_file_directory 'should_not_delete2.txt', 'safe_dir2'
+    dir_path  = dir.send(:complete_path)
+    file_path = file.send(:complete_path)
+
+    File.exists?(dir_path).should  == true
+    File.exists?(file_path).should == true
+
+    file.destroy
+    dir.destroy
+
+    File.exists?(file_path).should == false
+    File.exists?(dir_path).should  == false    
   end
 
 end
