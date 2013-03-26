@@ -35,12 +35,12 @@ describe DataMapper::Gitfs do
     return file, dir
   end
 
-  it 'should save inside parent directory model' do
+  it 'saves inside parent directory model' do
     file, dir = create_file_directory 'new.txt', 'new'
     file.base_path.should == RDir.first.files.first.base_path
   end
 
-  it 'should move its children with a rename' do
+  it 'moves its children with a rename' do
     file, dir      = create_file_directory
     original_path  = dir.send(:complete_path)
     dir            = RDir.first(:base_path => 'temp')
@@ -55,7 +55,7 @@ describe DataMapper::Gitfs do
     File.exists?("#{new_path}/#{file.base_path}").should == true
   end
 
-  it 'should not delete if has children' do
+  it 'doesnt delete if has children' do
     file, dir = create_file_directory 'should_not_delete.txt', 'safe_dir'
     dir_path  = dir.send(:complete_path)
     file_path = file.send(:complete_path)
@@ -69,7 +69,7 @@ describe DataMapper::Gitfs do
     File.exists?(file_path).should == true
   end
 
-  it 'should delete if it doesnt have children' do
+  it 'deletes if it doesnt have children' do
     file, dir = create_file_directory 'should_not_delete2.txt', 'safe_dir2'
     dir_path  = dir.send(:complete_path)
     file_path = file.send(:complete_path)
@@ -84,7 +84,7 @@ describe DataMapper::Gitfs do
     File.exists?(dir_path).should  == false
   end
 
-  it 'should allow destroy with bang' do
+  it 'allows destroy with bang' do
     file, dir = create_file_directory 'should_not_delete2.txt', 'safe_dir2'
     dir_path  = dir.send(:complete_path)
 
