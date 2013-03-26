@@ -1,11 +1,23 @@
 module DataMapper::Gitfs::Model
   module Common
-    
+    def repo
+      repository.adapter.repo
+    end
+
     def path
       @path ||= complete_path
     end
 
     private
+    
+    def git_update_tree(message)
+      pwd = Dir.pwd
+      Dir.chdir repository.adapter.path
+      repo.git.add({}, '-Av', '.')
+      repo.commit_index message
+      Dir.chdir pwd
+    end
+
     def rename_or_create_resource
       rename_resource if     should_rename?
       create_resource unless resource_exists?
@@ -22,11 +34,8 @@ module DataMapper::Gitfs::Model
     end
 
     def create_resource
+      FileUtils.mkdir_p ::File.dirname(complete_path)
       FileUtils.touch complete_path
-    end
-
-    def create_directory
-      FileUtils.mkdir complete_path
     end
 
     def resource_exists?
@@ -40,13 +49,20 @@ module DataMapper::Gitfs::Model
     def rename_resource
       old_path = complete_path(original_base_path)
       new_path = complete_path
+
+      if ::File.dirname(old_path) != ::File.dirname(new_path)
+        FileUtils.mkdir_p ::File.dirname(new_path)
+      end
       FileUtils.mv old_path, new_path
-    end 
+    end
+
+    def original_complete_path
+      complete_path original_base_path
+    end
 
     def original_base_path
-      original_attributes.each do |attr, value|
-        return value if attr.name == :base_path
-      end
-    end    
-  end
-end
+      original_attributes.each { |attr, v| return v if attr.name == :base_path }
+    end # original_base_path
+
+  end # Common
+end # Module

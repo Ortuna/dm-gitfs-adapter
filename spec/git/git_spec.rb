@@ -15,7 +15,12 @@ describe DataMapper::Gitfs do
     resource_type :file
   end
   
-  def create_resource(resource_path, content)
+  class DirResourceGit
+    include DataMapper::Gitfs::Resource
+    resource_type :directory
+  end
+
+  def create_file(resource_path, content)
     file = FileResourceGit.new
     file.base_path = resource_path
     file.content   = content
@@ -23,16 +28,21 @@ describe DataMapper::Gitfs do
     file
   end
 
+  def create_directory(resource_path)
+    directory = DirResourceGit.new
+    directory.base_path = resource_path
+    directory.save
+    directory
+  end
 
   it 'has a repo variable' do
-    file = create_resource('repo_test.txt', 'abz')
+    file = create_file('repo_test.txt', 'abz')
     file.repo.should_not be_nil
 
   end
 
-  it 'creats a commit for each change' do
-    file = create_resource('example_file.txt', 'xyz')
-    file.save
+  it 'creates a commit for each change' do
+    file = create_file('example_file.txt', 'xyz')
 
     file.repo.log.count.should == 1
 
@@ -44,5 +54,36 @@ describe DataMapper::Gitfs do
     file.repo.log.count.should == 2
   end
 
-  it 'should delete old files from the index'
+  it 'accepts directories in its path' do
+    file           = create_file('example_file.txt', 'xyz')
+    original_path  = file.send(:complete_path)
+
+    file = FileResourceGit.first(:base_path => 'example_file.txt')
+    file.base_path = 'xyz/test.txt'
+    file.save
+
+    File.exists?(original_path).should == false
+    File.exists?(file.send(:complete_path)).should == true
+  end
+
+  it 'has a repo variable' do
+    directory = create_directory('new_directory')
+    directory.repo.should_not be_nil
+  end
+
+  it 'create a commit for each change' do
+    directory     = create_directory('changeable')
+    original_path = directory.send(:complete_path)
+
+
+    directory = DirResourceGit.first(:base_path => 'changeable')
+    directory.base_path = 'zztop'
+    directory.save
+
+    directory.repo.log.count.should == 2
+
+    File.exists?(original_path).should == false
+    File.exists?(directory.send(:complete_path)).should == true
+  end
+
 end

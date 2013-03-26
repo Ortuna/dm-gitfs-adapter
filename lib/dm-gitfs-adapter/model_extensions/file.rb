@@ -4,10 +4,6 @@ module DataMapper::Gitfs::Model
       model.property :content, DataMapper::Property::Text
     end
 
-    def repo
-      repository.adapter.repo
-    end
-
     def destroy
       destroy_resource if resource_exists?
     end
@@ -16,7 +12,7 @@ module DataMapper::Gitfs::Model
       send("save_#{model.resource_type}") if respond_to?("save_#{model.resource_type}")
       rename_or_create_resource
       write_content_to_file
-      git_append_file
+      git_update_tree "Updated #{base_path}"
     end
 
     def content
@@ -24,12 +20,6 @@ module DataMapper::Gitfs::Model
     end
 
     private
-    def git_append_file
-      dir_path = ::File.dirname(complete_path)
-      Dir.chdir("#{dir_path}") { repo.add(complete_path) }
-      repo.commit_index "saved file - #{base_path}"
-    end
-
     def read_content_from_file
       ::File.open(complete_path, 'r') { |file| return file.read }
     end
