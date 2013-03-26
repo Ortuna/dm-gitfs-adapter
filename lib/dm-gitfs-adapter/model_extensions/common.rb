@@ -42,9 +42,9 @@ module DataMapper::Gitfs::Model
         next unless parent_model.model.resource_type == :directory
         return parent_model
       end
-      return nil
+      nil
     rescue
-      return nil
+      nil
     end
 
     def destroy_resource
