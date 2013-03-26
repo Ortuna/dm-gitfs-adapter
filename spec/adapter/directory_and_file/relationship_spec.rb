@@ -1,4 +1,5 @@
 describe 'relationship' do
+  
   class ExampleDirectory
     include DataMapper::Gitfs::Resource
     resource_type :directory

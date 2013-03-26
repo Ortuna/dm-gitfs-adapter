@@ -1,4 +1,5 @@
 describe DataMapper::Gitfs::Model::Directory do
+  
   before :each do
     @tmp_path = File.expand_path('/tmp/git_directory_specs')
     FileUtils.mkdir(@tmp_path) unless File.exists?(@tmp_path)

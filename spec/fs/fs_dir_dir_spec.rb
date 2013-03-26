@@ -1,4 +1,5 @@
 describe DataMapper::Gitfs do
+
   before :each do
     @tmp_path = File.expand_path('/tmp/git_dir_file_spec')
     FileUtils.mkdir(@tmp_path) unless File.exists?(@tmp_path)
@@ -43,7 +44,7 @@ describe DataMapper::Gitfs do
     File.exists?(path).should == true
   end
 
-  it 'saves normally if there isnt a parent' do 
+  it 'saves normally if there isnt a parent' do
     dir              = NestedDir.new
     dir.base_path    = 'example path'
     dir.save
@@ -54,6 +55,7 @@ describe DataMapper::Gitfs do
     dir2.base_path = 'another path'
     dir2.save
 
-    File.exists?(dir2.send(:complete_path)).should == true    
+    File.exists?(dir2.send(:complete_path)).should == true
   end
+  
 end
