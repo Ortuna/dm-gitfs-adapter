@@ -11,6 +11,11 @@ module DataMapper::Gitfs::Model
       git_update_tree "Removed #{base_path}"
     end
 
+    def destroy!
+      FileUtils.rm_rf complete_path
+      git_update_tree "Removed! #{base_path}"
+    end
+
     def save
       rename_resource  if     should_rename?
       create_directory unless resource_exists?

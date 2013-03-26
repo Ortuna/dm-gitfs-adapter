@@ -81,7 +81,15 @@ describe DataMapper::Gitfs do
     dir.destroy
 
     File.exists?(file_path).should == false
-    File.exists?(dir_path).should  == false    
+    File.exists?(dir_path).should  == false
+  end
+
+  it 'should allow destroy with bang' do
+    file, dir = create_file_directory 'should_not_delete2.txt', 'safe_dir2'
+    dir_path  = dir.send(:complete_path)
+
+    dir.destroy!
+    File.exists?(dir_path).should  == false
   end
 
 end
