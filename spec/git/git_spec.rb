@@ -34,11 +34,11 @@ describe DataMapper::Gitfs do
       directory.save
     end
   end
+
   describe 'save and change #file' do
     it 'has a repo variable' do
       file = create_file('repo_test.txt', 'abz')
       file.repo.should_not be_nil
-
     end
 
     it 'creates a commit for each change' do

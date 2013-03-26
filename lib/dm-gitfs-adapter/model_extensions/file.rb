@@ -28,6 +28,6 @@ module DataMapper::Gitfs::Model
 
     def write_content_to_file
       ::File.open(complete_path, 'w') { |file| file.write(content) }
-    end 
+    end
   end
 end

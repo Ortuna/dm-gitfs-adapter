@@ -4,7 +4,7 @@ describe 'relationship' do
     resource_type :directory
     property      :title, String
 
-    has n, :files, ExampleFile
+    has n, :files, 'ExampleFile'
     has n, :directories, self
   end
 
@@ -12,7 +12,7 @@ describe 'relationship' do
     include DataMapper::Gitfs::Resource
     resource_type :file
 
-    belongs_to :directory,   ExampleDirectory
+    belongs_to :directory, 'ExampleDirectory'
   end
 
   it 'finds all files under a directory' do
@@ -30,4 +30,5 @@ describe 'relationship' do
     directory = ExampleDirectory.first
     File.basename(directory.files.first.path).should == 'example_file.md'
   end
+
 end

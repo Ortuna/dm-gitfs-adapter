@@ -25,8 +25,24 @@ module DataMapper::Gitfs::Model
 
     def complete_path(base_path = self.base_path)
       return if !base_path
-      complete_path = "#{repository.adapter.path}/#{base_path}"
+
+      complete_path = if(parent_model = parent_model_extract)
+        "#{repository.adapter.path}/#{parent_model.base_path}/#{base_path}"
+      else
+        "#{repository.adapter.path}/#{base_path}"
+      end
+
       complete_path = ::File.expand_path(complete_path)
+    end
+
+    def parent_model_extract
+      relationships.entries.each do |relationship|
+        next unless relationship.class == DataMapper::Associations::ManyToOne::Relationship
+        parent_model = instance_variable_get(relationship.instance_variable_name)
+        next unless parent_model.model.resource_type == :directory
+        return instance_variable_get(relationship.instance_variable_name)
+      end
+      nil
     end
 
     def destroy_resource

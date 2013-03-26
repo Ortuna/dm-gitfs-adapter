@@ -20,7 +20,6 @@ module DataMapper::Gitfs::Model
     def rename_resource
       old_path = complete_path(original_base_path)
       new_path = complete_path
-
       FileUtils.mv old_path, new_path
     end
 
