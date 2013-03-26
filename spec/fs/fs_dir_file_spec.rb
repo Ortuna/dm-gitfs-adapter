@@ -1,6 +1,6 @@
 describe DataMapper::Gitfs do
   before :each do
-    @tmp_path = File.expand_path('/tmp/git_relationship_history')
+    @tmp_path = File.expand_path('/tmp/git_dir_file_spec')
     FileUtils.mkdir(@tmp_path) unless File.exists?(@tmp_path)
     DataMapper.setup(:gitfs, "gitfs:://#{@tmp_path}")
   end

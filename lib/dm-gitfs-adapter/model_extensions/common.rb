@@ -40,9 +40,11 @@ module DataMapper::Gitfs::Model
         next unless relationship.class == DataMapper::Associations::ManyToOne::Relationship
         parent_model = instance_variable_get(relationship.instance_variable_name)
         next unless parent_model.model.resource_type == :directory
-        return instance_variable_get(relationship.instance_variable_name)
+        return parent_model
       end
-      nil
+      return nil
+    rescue
+      return nil
     end
 
     def destroy_resource
