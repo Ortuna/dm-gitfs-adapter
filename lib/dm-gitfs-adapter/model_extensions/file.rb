@@ -35,7 +35,12 @@ module DataMapper::Gitfs::Model
     end
 
     def write_content_to_file
-      ::File.open(complete_path, 'w') { |file| file.write(content) }
+      ::File.open(complete_path, 'w') { |file| file.write(process_content(content)) }
+    end
+
+    def process_content(content)
+      content = content + "\n"
+      content.gsub! /\n+\Z/, "\n"
     end
   end
 end

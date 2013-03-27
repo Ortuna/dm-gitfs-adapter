@@ -42,10 +42,16 @@ describe DataMapper::Gitfs::Model::File do
     File.exists?("#{@tmp_path}/example_file.txt").should == false
   end
 
-  it 'saves the contents of the model to the file' do
+  it 'adds a new line to the end' do
     base_path = "example_file_with_content.txt"
     file      = create_resource(base_path, 'some content here')
-    file.content.should == "some content here"
+    file.content.should == "some content here\n"
+  end
+
+  it 'strips multiple new lines' do
+    base_path = "example_file_with_content.txt"
+    file      = create_resource(base_path, "some content here\n\n\n")
+    file.content.should == "some content here\n"
   end
 
   it 'renames if path has changed' do
@@ -71,7 +77,7 @@ describe DataMapper::Gitfs::Model::File do
     file.save
 
     file = find_resource(base_path)
-    file.content.should == "new content"    
+    file.content.should == "new content\n"
   end
 
   it 'all together' do
@@ -83,7 +89,7 @@ describe DataMapper::Gitfs::Model::File do
     file.save
 
     file = find_resource("changed_path.txt")
-    file.content.should   == "Changed Content"
+    file.content.should   == "Changed Content\n"
     file.base_path.should == "changed_path.txt"
   end
 end
