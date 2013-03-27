@@ -16,6 +16,7 @@ module DataMapper::Gitfs::Model
       rename_resource  if     should_rename?
       create_directory unless resource_exists?
       create_config    unless config_exists?
+      update_config    if     should_update_config?
 
       git_update_tree "Updated #{base_path}"
     end
@@ -39,6 +40,10 @@ module DataMapper::Gitfs::Model
          YAML.dump(fields, config_file)
       end
     end
+    
+    def update_config
+      create_config
+    end
 
     def fields_to_hash
       fields.inject({}) do |memo, field|
@@ -48,6 +53,10 @@ module DataMapper::Gitfs::Model
         end
         memo
       end
+    end
+
+    def should_update_config?
+      true
     end
 
     def exclude_fields_from_config

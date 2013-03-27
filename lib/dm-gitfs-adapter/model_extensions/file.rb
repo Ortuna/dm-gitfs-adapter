@@ -11,7 +11,7 @@ module DataMapper::Gitfs::Model
     end
 
     def save
-      send("save_#{model.resource_type}") if respond_to?("save_#{model.resource_type}")
+      custom_save
       rename_or_create_resource
       write_content_to_file
       git_update_tree "Updated #{base_path}"
@@ -22,6 +22,12 @@ module DataMapper::Gitfs::Model
     end
 
     private
+    def custom_save
+      if respond_to?("save_#{model.resource_type}")
+        send("save_#{model.resource_type}")
+      end
+    end
+
     def read_content_from_file
       ::File.open(complete_path, 'r') { |file| return file.read }
     end

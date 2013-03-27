@@ -98,4 +98,5 @@ describe DataMapper::Gitfs::Model::Directory do
     directory = DirectoryWithProperty.first
     directory.axis.should == 'exceptional string'
   end
+  
 end

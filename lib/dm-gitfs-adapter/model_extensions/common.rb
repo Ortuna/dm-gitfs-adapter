@@ -25,14 +25,15 @@ module DataMapper::Gitfs::Model
 
     def complete_path(base_path = self.base_path)
       return if !base_path
+      complete_path = ::File.expand_path(complete_path_with_relationship(base_path))
+    end
 
-      complete_path = if(parent_model = parent_model_extract)
+    def complete_path_with_relationship(base_path = self.base_path)
+      if(parent_model = parent_model_extract)
         "#{repository.adapter.path}/#{parent_model.base_path}/#{base_path}"
       else
         "#{repository.adapter.path}/#{base_path}"
       end
-
-      complete_path = ::File.expand_path(complete_path)
     end
 
     def parent_model_extract

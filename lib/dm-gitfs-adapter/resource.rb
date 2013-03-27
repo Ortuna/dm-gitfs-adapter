@@ -20,7 +20,7 @@ module DataMapper
         return @resource_type if @resource_type
         if allowed_resource_types.include? type
           @resource_type ||= type
-          self.send(:include, allowed_resource_types[type]) if allowed_resource_types[type]
+          include_model_specific_module(type) if allowed_resource_types[type]
         else
           raise "Unknown resource_type #{type}"
         end
@@ -32,6 +32,10 @@ module DataMapper
       end
 
       private
+      def include_model_specific_module(type)
+        self.send(:include, allowed_resource_types[type])
+      end
+
       def allowed_resource_types
         { 
           :directory => DataMapper::Gitfs::Model::Directory,
