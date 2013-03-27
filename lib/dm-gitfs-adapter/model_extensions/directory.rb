@@ -46,10 +46,10 @@ module DataMapper::Gitfs::Model
     end
 
     def fields_to_hash
-      fields.inject({}) do |memo, field|
-        field_name = field.name
-        unless exclude_fields_from_config.include?(field_name)
-          memo[field_name.to_s] = send(field_name)  
+      attributes.inject({}) do |memo, (attribute, value)|
+        attr_name = attribute
+        unless exclude_fields_from_config.include?(attr_name)
+          memo[attr_name] = value
         end
         memo
       end

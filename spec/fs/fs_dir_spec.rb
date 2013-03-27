@@ -74,7 +74,18 @@ describe DataMapper::Gitfs::Model::Directory do
 
     directory.destroy
     File.exists?(complete_path).should == true
-    File.exists?("#{complete_path}/example_file.zip").should == true    
+    File.exists?("#{complete_path}/example_file.zip").should == true
+  end
+
+  it 'should delete occupied directory with bang' do
+    directory     = create_resource('folderz')
+    complete_path = directory.send(:complete_path)
+
+    FileUtils.touch "#{complete_path}/example_file.zip"
+
+    directory.destroy!
+    File.exists?(complete_path).should == false
+    File.exists?("#{complete_path}/example_file.zip").should == false
   end
 
   it 'should write a config on save' do

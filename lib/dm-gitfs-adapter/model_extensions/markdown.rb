@@ -14,9 +14,9 @@ module DataMapper::Gitfs::Model
 
     private
     def metadata_for_content
-      """ #{Gitfshelper.hash_to_yaml(metadata_hash)}
-      ----------
-      """
+      output = "#{Gitfshelper.hash_to_yaml(metadata_hash)}"
+      output << "----\n"
+      output
     end
 
     def markdown_for_content

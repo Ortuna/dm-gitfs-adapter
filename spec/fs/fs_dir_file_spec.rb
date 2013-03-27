@@ -13,7 +13,7 @@ describe DataMapper::Gitfs do
 
   class RFile
     include DataMapper::Gitfs::Resource
-    resource_type :file
+    resource_type :markdown
     belongs_to    :directory, 'RDir'
   end
   
@@ -25,11 +25,11 @@ describe DataMapper::Gitfs do
 
   def create_file_directory(file_name = 'temp.txt', directory_name = 'temp')
     dir            = RDir.new
-    dir.base_path  = 'temp'
+    dir.base_path  = directory_name
     dir.save
 
     file           = RFile.new
-    file.base_path = 'temp.txt'
+    file.base_path = file_name
     file.directory = dir
     file.save
 
@@ -93,4 +93,13 @@ describe DataMapper::Gitfs do
     File.exists?(dir_path).should  == false
   end
 
+  it 'doesnt complain about unloaded relationship' do
+    file, dir = create_file_directory 'saveable.txt', 'saveable'
+    file = RFile.first
+    expect {
+      file.directory
+      file.save
+    }.to_not raise_error
+    
+  end
 end

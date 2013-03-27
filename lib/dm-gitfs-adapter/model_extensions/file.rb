@@ -30,6 +30,8 @@ module DataMapper::Gitfs::Model
 
     def read_content_from_file
       ::File.open(complete_path, 'r') { |file| return file.read }
+    rescue
+      nil
     end
 
     def write_content_to_file
