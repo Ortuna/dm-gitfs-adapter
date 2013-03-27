@@ -1,0 +1,1 @@
+DataMapper.setup(:gitfs, "gitfs:://path/to/directory/tree")
