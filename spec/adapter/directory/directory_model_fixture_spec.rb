@@ -1,5 +1,10 @@
-describe DirectoryModel do
+describe 'DirectoryModel' do
   
+  class DirectoryModel
+    include DataMapper::Gitfs::Resource
+    resource_type :directory
+  end
+
   before :all do
     DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
   end

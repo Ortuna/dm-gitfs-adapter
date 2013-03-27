@@ -1,4 +1,9 @@
-describe FileModel do
+describe 'FileModel' do
+  
+  class FileModel
+    include DataMapper::Gitfs::Resource
+    resource_type :file
+  end
 
   before :all do
     DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")

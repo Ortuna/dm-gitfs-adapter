@@ -1,4 +1,9 @@
 describe  DataMapper::Gitfs::Resource do
+  
+  class ExampleFile
+    include DataMapper::Gitfs::Resource
+    resource_type :file
+  end
 
   it 'sets the correct resource type' do
     ExampleFile.resource_type.should == :file
