@@ -16,6 +16,13 @@ describe DataMapper::Gitfs::Model::Directory do
     resource_type :directory
   end
 
+  class DirectoryWithProperty
+    include DataMapper::Gitfs::Resource
+    resource_type :directory
+
+    property :axis, String
+  end
+
   def find_resource(base_path)
     DirectoryResource.first(:base_path => base_path)
   end
@@ -68,5 +75,27 @@ describe DataMapper::Gitfs::Model::Directory do
     directory.destroy
     File.exists?(complete_path).should == true
     File.exists?("#{complete_path}/example_file.zip").should == true    
+  end
+
+  it 'should write a config on save' do
+    directory = DirectoryWithProperty.new()
+    directory.axis      = 'exceptional string'
+    directory.base_path = 'dir_with_config'
+    directory.save
+    
+    directory_path = directory.send(:complete_path)
+    config_file    = "#{directory_path}/_config.yml"
+
+    File.exists?(config_file).should == true    
+  end
+
+  it 'saves extra properties' do
+    directory = DirectoryWithProperty.new()
+    directory.axis      = 'exceptional string'
+    directory.base_path = 'dir_with_property'
+    directory.save
+
+    directory = DirectoryWithProperty.first
+    directory.axis.should == 'exceptional string'
   end
 end
