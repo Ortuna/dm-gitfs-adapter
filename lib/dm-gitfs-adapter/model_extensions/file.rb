@@ -39,7 +39,7 @@ module DataMapper::Gitfs::Model
     end
 
     def process_content(content)
-      content = content + "\n"
+      content << "\n"
       content.gsub! /\n+\Z/, "\n"
     end
   end
