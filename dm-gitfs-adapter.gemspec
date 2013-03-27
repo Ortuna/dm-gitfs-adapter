@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = DataMapper::Gitfs::VERSION
   spec.authors       = ["Sumeet Singh"]
   spec.email         = ["ortuna@gmail.com"]
-  spec.description   = %q{Write a gem description}
-  spec.summary       = %q{Write a gem summary}
+  spec.description   = %q{folder/directory mapper that keeps git history}
+  spec.summary       = spec.description
   spec.homepage      = ""
   spec.license       = "MIT"
 
