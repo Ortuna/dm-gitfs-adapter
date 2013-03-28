@@ -13,10 +13,10 @@ module DataMapper
         super
         @path = options["path"]
         verify_adapter_path_exists! @path
-        create_git_repo! @path
+        find_or_create_repo! @path
       end
 
-      def create_git_repo!(path)
+      def find_or_create_repo!(path)
         @repo = Grit::Repo.new(path)
       rescue
         @repo = Grit::Repo.init(path)
