@@ -14,14 +14,8 @@ module DataMapper
         @path        = make_path(options["path"])
         @remote_path = options["query"]
 
-
-        if @remote_path
-          clone_repo @remote_path, @path
-        else
-          verify_adapter_path_exists! @path  
-          @repo = find_or_create_repo!(@path)
-        end
-        
+        @remote_path ? clone_repo(@remote_path, @path) : verify_path_exists!(@path)
+        @repo = find_or_create_repo!(@path)
       end
 
       def read(query)
@@ -37,14 +31,13 @@ module DataMapper
         Grit::Repo.init(path)
       end
 
-      def verify_adapter_path_exists!(path)
+      def verify_path_exists!(path)
         raise "Path not found" unless ::File.exists?(path)
       end
 
       def clone_repo(remote_path, local_path)
         gritty = Grit::Git.new(local_path)
         gritty.clone({}, remote_path, local_path)
-        Grit::Repo.new(path)
       end
 
       def make_path(path)
