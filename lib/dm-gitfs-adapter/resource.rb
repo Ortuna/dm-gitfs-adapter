@@ -3,6 +3,7 @@ module DataMapper
     module Resource
 
       include DataMapper::Gitfs::Model::Common
+      include DataMapper::Gitfs::Model::Git
 
       def self.included(model)
         model.send(:include, DataMapper::Resource)
