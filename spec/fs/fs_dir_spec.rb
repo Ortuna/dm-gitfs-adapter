@@ -66,6 +66,13 @@ describe DataMapper::Gitfs::Model::Directory do
     dir.save.should == false
   end
 
+  it 'doesnt create already existing directory' do
+    create_resource('dir 1')
+    d = DirectoryResource.new
+    d.base_path = 'dir 1'
+    d.save.should == false
+  end
+
   it 'should delete empty directories' do
     directory     = create_resource('folderz')
     complete_path = directory.send(:complete_path)

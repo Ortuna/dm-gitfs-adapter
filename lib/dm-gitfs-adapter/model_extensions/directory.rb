@@ -13,6 +13,7 @@ module DataMapper::Gitfs::Model
     end
 
     def save
+      check_existance!(complete_path) if new?
       rename_resource  if     should_rename?
       create_directory unless resource_exists?
       create_config    unless config_exists?
