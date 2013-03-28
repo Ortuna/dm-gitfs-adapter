@@ -6,7 +6,7 @@ module DataMapper
       include DataMapper::Gitfs::Directory
       include DataMapper::Gitfs::File
 
-      attr_reader   :path
+      attr_reader   :path, :remote_path
       attr_accessor :repo
 
       def initialize(name, options)

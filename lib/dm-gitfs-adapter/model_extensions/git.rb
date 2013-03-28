@@ -6,6 +6,11 @@ module DataMapper::Gitfs::Model
       repo.git.add({}, '-Av', '.')
       repo.commit_index message
       Dir.chdir pwd
+      git_push_to_origin
+    end
+
+    def git_push_to_origin
+      repo.git.push {}
     end
   end
 end
