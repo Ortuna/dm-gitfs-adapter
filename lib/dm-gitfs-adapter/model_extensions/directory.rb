@@ -19,12 +19,20 @@ module DataMapper::Gitfs::Model
       update_config    if     should_update_config?
 
       git_update_tree "Updated #{base_path}"
+      true
+    rescue
+      false
     end
 
     private
+    def check_existance!(path)
+      raise 'Path already exists' if ::File.exists? path
+    end
+
     def rename_resource
       old_path = complete_path(original_base_path)
       new_path = complete_path
+      check_existance! new_path
       FileUtils.mv old_path, new_path
     end
 

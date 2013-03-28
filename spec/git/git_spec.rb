@@ -7,7 +7,8 @@ describe DataMapper::Gitfs do
   end
 
   after :each do
-    DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
+    @fixture_path = "#{SPEC_PATH}/fixtures/sample_tree"
+    DataMapper.setup(:gitfs, "gitfs:://#{@fixture_path}")
     FileUtils.rm_rf @tmp_path
   end
 
@@ -67,7 +68,7 @@ describe DataMapper::Gitfs do
       File.exists?(original_path).should == false
       File.exists?(file.send(:complete_path)).should == true
     end
-    
+
   end
 
   describe 'save and change #directory' do
@@ -83,7 +84,7 @@ describe DataMapper::Gitfs do
 
 
       directory = DirResourceGit.first(:base_path => 'changeable')
-      directory.base_path = 'zztop'
+      directory.base_path = 'saveable'
       directory.save
 
       directory.repo.log.count.should == 2
@@ -123,13 +124,17 @@ describe DataMapper::Gitfs do
   describe 'remote repos', :remote => true do
 
     before :each do
+      # @remote_repo = "git@github.com:Ortuna/blog.git"
       @new_path    = "#{@tmp_path}_remote"
-      @remote_repo = "git@github.com:Ortuna/blog.git"
+      @remote_repo = "#{SPEC_PATH}/fixtures/sample_tree"
+
+      FileUtils.cp_r(@remote_repo, "#{@new_path}_source")
       DataMapper.setup(:gitfs, "gitfs:://#{@new_path}?#{@remote_repo}")
     end
 
     after :each do
       FileUtils.rm_rf @new_path
+      FileUtils.rm_rf "#{@new_path}_source"
     end
 
     it 'pulls in a remote repo' do
@@ -144,7 +149,8 @@ describe DataMapper::Gitfs do
       dir.save
 
       FileUtils.rm_rf @new_path
-      DataMapper.setup(:gitfs, "gitfs:://#{@new_path}?#{@remote_repo}")
+      DataMapper.setup(:gitfs, "gitfs:://#{@new_path}?#{@new_path}_source")
+
       DirResourceGit.first(:base_path => 'new_path').should_not be_nil
     end
 

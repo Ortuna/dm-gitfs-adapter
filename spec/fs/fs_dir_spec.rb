@@ -58,6 +58,14 @@ describe DataMapper::Gitfs::Model::Directory do
     dir.base_path.should == 'folder1'
   end
 
+  it 'doesnt allow renaming to existing directory' do
+    create_resource('dir 1')
+    create_resource('dir 2')
+    dir = find_resource('dir 2')
+    dir.base_path = 'dir 1'
+    dir.save.should == false
+  end
+
   it 'should delete empty directories' do
     directory     = create_resource('folderz')
     complete_path = directory.send(:complete_path)
