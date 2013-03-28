@@ -25,10 +25,6 @@ module DataMapper::Gitfs::Model
     end
 
     private
-    def check_existance!(path)
-      raise 'Path already exists' if ::File.exists? path
-    end
-
     def rename_resource
       old_path = complete_path(original_base_path)
       new_path = complete_path

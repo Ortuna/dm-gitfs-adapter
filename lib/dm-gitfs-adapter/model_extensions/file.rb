@@ -12,10 +12,15 @@ module DataMapper::Gitfs::Model
     end
 
     def save
-      custom_save
-      rename_or_create_resource
+      custom_save #for markdown to condense everything into @content
+      check_existance!(complete_path) if new?
+      rename_resource if     should_rename?
+      create_resource unless resource_exists?
       write_content_to_file
       git_update_tree "Updated #{base_path}"
+      true
+    rescue
+      false
     end
 
     def content
@@ -43,6 +48,6 @@ module DataMapper::Gitfs::Model
       content << "\n"
       content.gsub! /\n+\Z/, "\n"
     end
-    
+
   end
 end

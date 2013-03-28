@@ -10,12 +10,6 @@ module DataMapper::Gitfs::Model
     end
 
     private
-    
-    def rename_or_create_resource
-      rename_resource if     should_rename?
-      create_resource unless resource_exists?
-    end
-
     def complete_path(base_path = self.base_path)
       return if !base_path
       complete_path = ::File.expand_path(complete_path_with_relationship(base_path))
@@ -61,11 +55,16 @@ module DataMapper::Gitfs::Model
     def rename_resource
       old_path = complete_path(original_base_path)
       new_path = complete_path
+      check_existance! new_path
 
       if ::File.dirname(old_path) != ::File.dirname(new_path)
         FileUtils.mkdir_p ::File.dirname(new_path)
       end
       FileUtils.mv old_path, new_path
+    end
+    
+    def check_existance!(path)
+      raise 'Path already exists' if ::File.exists? path
     end
 
     def original_complete_path

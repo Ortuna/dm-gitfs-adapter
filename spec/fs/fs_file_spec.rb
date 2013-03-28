@@ -16,11 +16,11 @@ describe DataMapper::Gitfs::Model::File do
   end
 
   def create_resource(resource_path, content)
-    file = FileResource.new
-    file.base_path = resource_path
-    file.content   = content
-    file.save
-    file
+    FileResource.new.tap do |file|
+      file.base_path = resource_path
+      file.content   = content
+      file.save
+    end
   end
 
   def find_resource(base_path)
@@ -66,6 +66,26 @@ describe DataMapper::Gitfs::Model::File do
     File.exists?("#{@tmp_path}/#{base_path}").should     == false
     File.exists?("#{@tmp_path}/#{new_base_path}").should == true
 
+  end
+
+  it 'doesnt allow renaming to already existing file' do
+    org_content   = 'some content here'
+    resource_path = 'file 1.md'
+
+    create_resource(resource_path, org_content)
+    create_resource("#{resource_path}_new", org_content)
+
+    file = FileResource.first(:base_path => "#{resource_path}_new")
+    file.base_path = resource_path
+    file.save.should == false
+  end
+
+  it 'doesnt allow creating an already existing file' do
+    create_resource('file 1.md', 'content')
+    create_resource('file 1.md', 'junk')
+
+    file = FileResource.first(:base_path => "file 1.md")
+    file.content.should == "content\n"
   end
 
   it 'saves changed content' do
