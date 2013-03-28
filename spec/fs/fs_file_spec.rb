@@ -81,7 +81,7 @@ describe DataMapper::Gitfs::Model::File do
   end
 
   it 'all together' do
-    base_path    = "file_org.txt"
+    base_path      = "file_org.txt"
     file           = create_resource(base_path, 'some content here')
 
     file.content   = "Changed Content"
