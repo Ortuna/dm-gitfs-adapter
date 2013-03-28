@@ -112,4 +112,20 @@ describe DataMapper::Gitfs do
     end
   end
 
+  describe 'remote repos' do
+    it 'pulls in a remote repo' do 
+      new_path = "#{@tmp_path}_remote"
+      DataMapper.setup(:gitfs, "gitfs:://#{new_path}?git@github.com:Ortuna/padrino-docs.git")
+
+      DirResourceGit.all.should_not be_empty
+
+      File.exists?(new_path).should == true
+      FileUtils.rm_rf new_path
+    end
+
+    xit 'pushes to the remote repo' do
+
+    end
+
+  end
 end

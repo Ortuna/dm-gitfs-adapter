@@ -11,20 +11,17 @@ module DataMapper
 
       def initialize(name, options)
         super
-        @path = options["path"]
-        verify_adapter_path_exists! @path
-        find_or_create_repo! @path
-      end
+        @path        = make_path(options["path"])
+        @remote_path = options["query"]
 
-      def find_or_create_repo!(path)
-        @repo = Grit::Repo.new(path)
-      rescue
-        @repo = Grit::Repo.init(path)
-      end
 
-      def verify_adapter_path_exists!(path)
-        path.sub! '://', ''
-        raise "Path not found" unless ::File.exists?(path)
+        if @remote_path
+          clone_repo @remote_path, @path
+        else
+          verify_adapter_path_exists! @path  
+          @repo = find_or_create_repo!(@path)
+        end
+        
       end
 
       def read(query)
@@ -33,6 +30,27 @@ module DataMapper
       end
 
       private
+
+      def find_or_create_repo!(path)
+        Grit::Repo.new(path)
+      rescue
+        Grit::Repo.init(path)
+      end
+
+      def verify_adapter_path_exists!(path)
+        raise "Path not found" unless ::File.exists?(path)
+      end
+
+      def clone_repo(remote_path, local_path)
+        gritty = Grit::Git.new(local_path)
+        gritty.clone({}, remote_path, local_path)
+        Grit::Repo.new(path)
+      end
+
+      def make_path(path)
+        path.sub! '://', ''
+      end
+
       def apply_config(record, options)
         return unless options
         options.each do |option, value|
