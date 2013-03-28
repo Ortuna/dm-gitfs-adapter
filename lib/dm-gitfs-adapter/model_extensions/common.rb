@@ -1,5 +1,6 @@
 module DataMapper::Gitfs::Model
   module Common
+    
     def repo
       repository.adapter.repo
     end

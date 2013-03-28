@@ -1,5 +1,6 @@
 module DataMapper::Gitfs::Model
   module File
+
     def self.included(model)
       model.property :content, DataMapper::Property::Text
     end
@@ -42,5 +43,6 @@ module DataMapper::Gitfs::Model
       content << "\n"
       content.gsub! /\n+\Z/, "\n"
     end
+    
   end
 end

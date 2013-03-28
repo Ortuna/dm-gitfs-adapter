@@ -37,6 +37,7 @@ describe DataMapper::Gitfs do
   end
 
   describe 'save and change #file' do
+
     it 'has a repo variable' do
       file = create_file('repo_test.txt', 'abz')
       file.repo.should_not be_nil
@@ -66,9 +67,11 @@ describe DataMapper::Gitfs do
       File.exists?(original_path).should == false
       File.exists?(file.send(:complete_path)).should == true
     end
+    
   end
 
   describe 'save and change #directory' do
+    
     it 'has a repo variable' do
       directory = create_directory('new_directory')
       directory.repo.should_not be_nil
@@ -88,9 +91,11 @@ describe DataMapper::Gitfs do
       File.exists?(original_path).should == false
       File.exists?(directory.send(:complete_path)).should == true
     end
+
   end
 
   describe 'destroy #file' do
+    
     it 'commits a delete to the repo' do
       file = create_file('new_file.txt', 'content')
       original_path = file.send(:complete_path)
@@ -99,9 +104,11 @@ describe DataMapper::Gitfs do
       repo = Grit::Repo.new(File.dirname(original_path))
       repo.log.count.should == 2      
     end
+
   end
 
   describe 'destroy #directory' do
+    
     it 'commits a delete to the repo' do
       directory     = create_directory('changeable')
       original_path = directory.send(:complete_path)
@@ -110,6 +117,7 @@ describe DataMapper::Gitfs do
       repo = Grit::Repo.new(File.dirname(original_path))
       repo.log.count.should == 2
     end
+
   end
 
   describe 'remote repos', :remote => true do

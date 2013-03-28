@@ -1,5 +1,6 @@
 module DataMapper::Gitfs::Model
   module Git
+
     def git_update_tree(message)
       pwd = Dir.pwd
       Dir.chdir repository.adapter.path
@@ -12,5 +13,6 @@ module DataMapper::Gitfs::Model
     def git_push_to_origin
       repo.git.push {}
     end
+    
   end
 end
