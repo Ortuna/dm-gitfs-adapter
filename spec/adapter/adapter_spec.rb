@@ -11,13 +11,23 @@ describe DataMapper::Gitfs::Adapter do
       DataMapper.setup(:gitfs, 'gitfs:://fixtures/unkown_tree') 
     }.to raise_error
   end
+    
+  it 'parses paths correctly with #make_path' do
+    path  = "/tmp/boom"
+    path2 = ":///tmp/boom" 
+    adapter = DataMapper.repository(:gitfs).adapter
+
+    adapter.send(:make_path, path).should == path
+    adapter.send(:make_path, path2).should == path
+  end
+
   describe 'protected fields' do
     DataMapper.setup(:gitfs, "gitfs:://#{SPEC_PATH}/fixtures/sample_tree")
     class ROExample
       include DataMapper::Gitfs::Resource
       resource_type :directory
     end
-
+  
     it 'should not allow setting of read-only fields' do
       item = ROExample.first
       expect {

@@ -29,7 +29,7 @@ module DataMapper
       end
 
       def repository_path
-        repository.adapter.options["path"]
+        repository.adapter.path
       end
 
       private

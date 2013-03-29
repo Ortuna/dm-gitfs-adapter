@@ -41,7 +41,7 @@ module DataMapper
       end
 
       def make_path(path)
-        path.sub! '://', ''
+        path.sub('://', '')
       end
 
       def apply_config(record, options)
