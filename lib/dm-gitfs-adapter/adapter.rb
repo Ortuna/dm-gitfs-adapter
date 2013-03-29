@@ -6,7 +6,7 @@ module DataMapper
       include DataMapper::Gitfs::Directory
       include DataMapper::Gitfs::File
 
-      attr_reader   :path, :remote_path
+      attr_reader   :path, :remote_path, :remote_push
       attr_accessor :repo
 
       def initialize(name, options)
@@ -15,6 +15,13 @@ module DataMapper
         @remote_path = options["query"]
 
         @remote_path ? clone_repo(@remote_path, @path) : verify_path_exists!(@path)
+
+        if (options["fragment"] && options["fragment"].downcase == 'local-only')
+          @remote_push = false
+        else
+          @remote_push = true
+        end
+
         @repo = find_or_create_repo!(@path)
       end
 

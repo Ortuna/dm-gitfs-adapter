@@ -47,14 +47,14 @@ describe DataMapper::Gitfs do
     it 'creates a commit for each change' do
       file = create_file('example_file.txt', 'xyz')
 
-      file.repo.log.count.should == 1
+      start_count = file.repo.log.count
 
       file = FileResourceGit.first(:base_path => 'example_file.txt')
       file.base_path = 'name_change.txt'
       file.content   = 'new content'
       file.save
       
-      file.repo.log.count.should == 2
+      file.repo.log.count.should == start_count+1
     end
 
     it 'accepts directories in its path' do
@@ -82,12 +82,13 @@ describe DataMapper::Gitfs do
       directory     = create_directory('changeable')
       original_path = directory.send(:complete_path)
 
+      start_count = directory.repo.log.count
 
       directory = DirResourceGit.first(:base_path => 'changeable')
       directory.base_path = 'saveable'
       directory.save
 
-      directory.repo.log.count.should == 2
+      directory.repo.log.count.should == start_count+1
 
       File.exists?(original_path).should == false
       File.exists?(directory.send(:complete_path)).should == true
@@ -103,7 +104,7 @@ describe DataMapper::Gitfs do
 
       file.destroy
       repo = Grit::Repo.new(File.dirname(original_path))
-      repo.log.count.should == 2      
+      repo.log.count.should == 2
     end
 
   end
@@ -126,7 +127,7 @@ describe DataMapper::Gitfs do
     before :each do
       # @remote_repo = "git@github.com:Ortuna/blog.git"
       @new_path    = "#{@tmp_path}_remote"
-      @remote_repo = "#{SPEC_PATH}/fixtures/sample_tree"
+      @remote_repo = "#{SPEC_PATH}/fixtures/bare"
 
       FileUtils.cp_r(@remote_repo, "#{@new_path}_source")
       DataMapper.setup(:gitfs, "gitfs:://#{@new_path}?#{@remote_repo}")
@@ -150,9 +151,22 @@ describe DataMapper::Gitfs do
 
       FileUtils.rm_rf @new_path
       DataMapper.setup(:gitfs, "gitfs:://#{@new_path}?#{@new_path}_source")
-
       DirResourceGit.first(:base_path => 'new_path').should_not be_nil
     end
 
+    it 'doesnt push in no-git mode' do
+      FileUtils.rm_rf @new_path
+      DataMapper.setup(:gitfs, "gitfs:://#{@new_path}?#{@new_path}_source#local-only")
+
+      dir  = DirResourceGit.first
+      dir.repo.git.should_not_receive(:push)
+
+      dir.base_path = 'new_pathzzz'
+      dir.save
+      
+      FileUtils.rm_rf @new_path
+    end
+
   end
+
 end

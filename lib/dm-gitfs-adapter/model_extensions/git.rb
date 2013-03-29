@@ -11,7 +11,7 @@ module DataMapper::Gitfs::Model
     end
 
     def git_push_to_origin
-      repo.git.push {}
+      repo.git.push {} if repository.adapter.remote_push
     end
     
   end
