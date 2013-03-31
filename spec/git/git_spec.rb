@@ -125,7 +125,6 @@ describe DataMapper::Gitfs do
   describe 'remote repos', :remote => true do
 
     before :each do
-      # @remote_repo = "git@github.com:Ortuna/blog.git"
       @new_path    = "#{@tmp_path}_remote"
       @remote_repo = "#{SPEC_PATH}/fixtures/bare"
 
@@ -142,6 +141,12 @@ describe DataMapper::Gitfs do
       DirResourceGit.all.should_not      be_empty
       DirResourceGit.repo.log.should_not be_empty
       File.exists?(@new_path).should == true
+    end
+
+    it 'errors on bad remote repo' do
+      expect {
+        DataMapper.setup(:gitfs, "gitfs:://#{@new_path}_exists?xyz123")
+      }.to raise_error
     end
 
     it 'pushes to the remote repo' do

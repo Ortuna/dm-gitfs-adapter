@@ -15,14 +15,8 @@ module DataMapper
         @remote_path = options["query"]
 
         @remote_path ? clone_repo(@remote_path, @path) : verify_path_exists!(@path)
-
-        if (options["fragment"] && options["fragment"].downcase == 'local-only')
-          @remote_push = false
-        else
-          @remote_push = true
-        end
-
-        @repo = find_or_create_repo!(@path)
+        @remote_push = is_remote_repo? options["fragment"]
+        @repo        = find_or_create_repo!(@path)
       end
 
       def read(query)
@@ -31,6 +25,13 @@ module DataMapper
       end
 
       private
+      def is_remote_repo?(fragment)
+        if (fragment && fragment.downcase == 'local-only')
+          @remote_push = false
+        else
+          @remote_push = true
+        end
+      end
 
       def find_or_create_repo!(path)
         Grit::Repo.new(path)
@@ -45,6 +46,11 @@ module DataMapper
       def clone_repo(remote_path, local_path)
         gritty = Grit::Git.new(local_path)
         gritty.clone({}, remote_path, local_path)
+        raise 'Could not clone' if Grit::Repo.new(local_path).git.list_remotes.empty?
+      end
+
+      def has_remotes?(repo)
+        
       end
 
       def make_path(path)
