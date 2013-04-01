@@ -17,7 +17,7 @@ module DataMapper::Gitfs::Model
 
     def complete_path_with_relationship(base_path = self.base_path)
       if(parent_model = parent_model_extract)
-        "#{repository.adapter.path}/#{parent_model.base_path}/#{base_path}"
+        "#{parent_model.send(:complete_path)}/#{base_path}"
       else
         "#{repository.adapter.path}/#{base_path}"
       end

@@ -41,6 +41,12 @@ describe DataMapper::Gitfs do
     file.base_path.should == RDir.first.files.first.base_path
   end
 
+  it 'is created under the parent dir 3 level deep' do
+    file, dir = create_file_directory 'new.txt', 'new'
+    path = File.expand_path("#{RDir.first.send(:complete_path)}/#{file.base_path}")
+    File.exists?(path).should == true
+  end
+
   it 'moves its children with a rename' do
     file, dir      = create_file_directory
     original_path  = dir.send(:complete_path)
