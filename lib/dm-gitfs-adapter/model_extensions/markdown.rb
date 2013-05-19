@@ -13,9 +13,15 @@ module DataMapper::Gitfs::Model
     end
 
     private
+    def yaml_load_metadata(metadata)
+      Gitfshelper.yaml_to_hash(metadata)
+    rescue
+      metadata
+    end
+
     def metadata_content
       hash_to_convert = if attribute_dirty?(:metadata) && metadata
-         metadata
+        yaml_load_metadata(metadata)
       else
         metadata_hash
       end

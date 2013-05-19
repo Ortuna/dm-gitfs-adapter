@@ -99,12 +99,26 @@ describe DataMapper::Gitfs::Model::Markdown do
     mdwp.save
 
     mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
-    mdwp.metadata = { time_dot_now: 'updated' }
+    mdwp.metadata = { 'time_dot_now' => 'updated' }
     mdwp.save
     
     mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
     mdwp.time_dot_now.should == 'updated'
 
+  end
+
+  it 'should update properties w/ YAML metadata' do
+    mdwp = MarkdownResourceWithProperty.new
+    mdwp.base_path     = 'md_with_property.md'
+    mdwp.time_dot_now  = 'ohh hai!'
+    mdwp.save
+
+    mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
+    mdwp.metadata = "time_dot_now: updated\n"
+    mdwp.save
+    
+    mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
+    mdwp.time_dot_now.should == 'updated'    
   end
 
 end

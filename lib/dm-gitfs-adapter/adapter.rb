@@ -58,7 +58,7 @@ module DataMapper
       end
 
       def apply_config(record, options)
-        return unless options
+        return unless options.respond_to? :each
         options.each do |option, value|
           if record.respond_to? "#{option}="
             record.public_send("#{option}=".to_sym, value)
