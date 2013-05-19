@@ -9,17 +9,23 @@ module DataMapper::Gitfs::Model
     end
 
     def save_markdown
-      self.content = metadata_for_content + markdown_for_content
+      self.content = metadata_content + markdown_content
     end
 
     private
-    def metadata_for_content
-      output = "#{Gitfshelper.hash_to_yaml(metadata_hash)}"
+    def metadata_content
+      hash_to_convert = if attribute_dirty?(:metadata) && metadata
+         metadata
+      else
+        metadata_hash
+      end
+
+      output = "#{Gitfshelper.hash_to_yaml(hash_to_convert)}"
       output << "----\n"
       output
     end
 
-    def markdown_for_content
+    def markdown_content
       markdown || ""
     end
 

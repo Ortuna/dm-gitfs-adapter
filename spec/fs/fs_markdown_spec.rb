@@ -92,4 +92,19 @@ describe DataMapper::Gitfs::Model::Markdown do
     content.should match(/time_dot_now:/)
   end
 
+  it 'should update properties w/ metadata' do
+    mdwp = MarkdownResourceWithProperty.new
+    mdwp.base_path     = 'md_with_property.md'
+    mdwp.time_dot_now  = 'ohh hai!'
+    mdwp.save
+
+    mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
+    mdwp.metadata = { time_dot_now: 'updated' }
+    mdwp.save
+    
+    mdwp = MarkdownResourceWithProperty.first(:base_path => 'md_with_property.md')
+    mdwp.time_dot_now.should == 'updated'
+
+  end
+
 end
