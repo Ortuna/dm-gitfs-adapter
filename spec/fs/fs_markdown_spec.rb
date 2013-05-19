@@ -81,4 +81,15 @@ describe DataMapper::Gitfs::Model::Markdown do
     mdwp.time_dot_now.should == time_dot_now
   end
 
+  it 'should not prefix properties with a colon' do
+    mdwp = MarkdownResourceWithProperty.new
+    mdwp.base_path     = 'md_with_property.md'
+    mdwp.time_dot_now  = 'ohh hai!'
+    mdwp.save
+
+    content = File.open("#{@tmp_path}/#{mdwp.base_path}", "r").read
+    content.should_not match(/:time_dot_now:/)
+    content.should match(/time_dot_now:/)
+  end
+
 end

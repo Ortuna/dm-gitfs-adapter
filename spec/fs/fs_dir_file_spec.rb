@@ -16,7 +16,7 @@ describe DataMapper::Gitfs do
     resource_type :markdown
     belongs_to    :directory, 'RDir'
   end
-  
+ 
   class RDir
     include DataMapper::Gitfs::Resource
     resource_type :directory
@@ -106,6 +106,13 @@ describe DataMapper::Gitfs do
       file.directory
       file.save
     }.to_not raise_error
-    
   end
+
+  it 'doesnt save relationship keys' do
+    file, dir = create_file_directory 'saveable.txt', 'saveable'
+    file = RFile.first
+    content = File.open(file.path, "r").read
+    content.should_not match(/directory_path/)
+  end
+
 end
