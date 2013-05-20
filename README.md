@@ -1,29 +1,30 @@
-# Dm::Gitfs::Adapter
-
-TODO: Write a gem description
+[![Build Status](https://travis-ci.org/Ortuna/dm-gitfs-adapter.png?branch=master)](https://travis-ci.org/Ortuna/dm-gitfs-adapter)
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
     gem 'dm-gitfs-adapter'
-
-And then execute:
-
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install dm-gitfs-adapter
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+DataMapper.setup(:gitfs, "gitfs:://path/to/directory/tree")
 
-## Contributing
+class Directory
+  include DataMapper::Gitfs::Resource
+  resource_type :directory
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+  has n, :markdowns, 'Markdown'
+end
+
+class Markdown
+  include DataMapper::Gitfs::Resource
+  resource_type :markdown
+
+  belongs_to :directory, 'Directory'
+end
+
+Directory.all # => List of directories in the repo path
+Directory.first.markdowns #=> list of markdown files in the first directory
+```
