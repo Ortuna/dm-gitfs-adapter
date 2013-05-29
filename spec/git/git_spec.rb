@@ -1,9 +1,10 @@
 describe DataMapper::Gitfs do
   
   before :each do
-    @tmp_path = File.expand_path('/tmp/git_history')
+    @remote_repo = "git://github.com/Ortuna/sample_tree"
+    @tmp_path     = File.expand_path('/tmp/git_history')
     FileUtils.mkdir(@tmp_path) unless File.exists?(@tmp_path)
-    DataMapper.setup(:gitfs, "gitfs:://#{@tmp_path}")
+    DataMapper.setup(:gitfs, "gitfs:://#{@tmp_path}?#{@remote_repo}#local-only")
   end
 
   after :each do
@@ -101,10 +102,13 @@ describe DataMapper::Gitfs do
     it 'commits a delete to the repo' do
       file = create_file('new_file.txt', 'content')
       original_path = file.send(:complete_path)
+      repo = Grit::Repo.new(File.dirname(original_path))
+      original_count = repo.log.count
 
       file.destroy
+
       repo = Grit::Repo.new(File.dirname(original_path))
-      repo.log.count.should == 2
+      repo.log.count.should == original_count+1
     end
 
   end
@@ -114,10 +118,13 @@ describe DataMapper::Gitfs do
     it 'commits a delete to the repo' do
       directory     = create_directory('changeable')
       original_path = directory.send(:complete_path)
+      repo = Grit::Repo.new(File.dirname(original_path))
+      original_count = repo.log.count
+
       directory.destroy
 
       repo = Grit::Repo.new(File.dirname(original_path))
-      repo.log.count.should == 2
+      repo.log.count.should == original_count+1
     end
 
   end
