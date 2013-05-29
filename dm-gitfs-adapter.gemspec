@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["ortuna@gmail.com"]
   spec.description   = %q{folder/directory mapper that keeps git history}
   spec.summary       = spec.description
-  spec.homepage      = ""
+  spec.homepage      = "http://github.com/ortuna/dm-gitfs-adapter"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'dm-core'
-  spec.add_dependency 'dm-types'
-  spec.add_dependency 'grit'
+  spec.add_dependency 'dm-core', '~>1.2.0'
+  spec.add_dependency 'dm-types', '~>1.2.0'
+  spec.add_dependency 'grit', '~>2.5.0'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
