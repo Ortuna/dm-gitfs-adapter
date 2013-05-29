@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Ortuna/dm-gitfs-adapter.png?branch=master)](https://travis-ci.org/Ortuna/dm-gitfs-adapter)
-
+[![Code Climate](https://codeclimate.com/github/Ortuna/dm-gitfs-adapter.png)](https://codeclimate.com/github/Ortuna/dm-gitfs-adapter)
 ## Installation
 
     gem 'dm-gitfs-adapter'
