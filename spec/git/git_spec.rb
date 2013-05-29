@@ -44,8 +44,7 @@ describe DataMapper::Gitfs do
       file.repo.should_not be_nil
     end
 
-    it 'creates a commit for each change' do
-      return if ENV['TRAVIS']
+    it 'creates a commit for each change', travis: true do
       file = create_file('example_file.txt', 'xyz')
 
       start_count = file.repo.log.count
@@ -79,8 +78,7 @@ describe DataMapper::Gitfs do
       directory.repo.should_not be_nil
     end
 
-    it 'create a commit for each change' do
-      return if ENV['TRAVIS']
+    it 'create a commit for each change', travis: true do
       directory     = create_directory('changeable')
       original_path = directory.send(:complete_path)
 
@@ -100,8 +98,7 @@ describe DataMapper::Gitfs do
 
   describe 'destroy #file' do
     
-    it 'commits a delete to the repo' do
-      return if ENV['TRAVIS']
+    it 'commits a delete to the repo', travis: true do
       file = create_file('new_file.txt', 'content')
       original_path = file.send(:complete_path)
 
@@ -112,8 +109,7 @@ describe DataMapper::Gitfs do
 
   end
 
-  describe 'destroy #directory' do
-    return if ENV['TRAVIS']
+  describe 'destroy #directory', travis: true do
     it 'commits a delete to the repo' do
       directory     = create_directory('changeable')
       original_path = directory.send(:complete_path)
